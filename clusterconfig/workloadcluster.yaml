@@ -1,0 +1,29 @@
+# WorkloadCluster CR for the OAI-RAN cluster
+# Defines CNI type and master interface for macvlan/VLAN traffic
+---
+apiVersion: infra.nephio.org/v1alpha1
+kind: WorkloadCluster
+metadata:
+  name: ran
+  labels:
+    nephio.org/cluster-type: ran
+    nephio.org/site: ran
+spec:
+  clusterName: ran
+  cnis:
+  - macvlan
+  masterInterface: ens3  # Change to your node's data plane interface
+---
+# WorkloadCluster CR for the SD-Core cluster
+apiVersion: infra.nephio.org/v1alpha1
+kind: WorkloadCluster
+metadata:
+  name: core
+  labels:
+    nephio.org/cluster-type: core
+    nephio.org/site: core
+spec:
+  clusterName: core
+  cnis:
+  - macvlan
+  masterInterface: ens3  # Change to your node's data plane interface

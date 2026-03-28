@@ -1,0 +1,13 @@
+# VLANIndex for VLAN allocation
+---
+apiVersion: vlan.resource.nephio.org/v1alpha1
+kind: VLANIndex
+metadata:
+  name: ran
+spec: {}
+---
+apiVersion: vlan.resource.nephio.org/v1alpha1
+kind: VLANIndex
+metadata:
+  name: core
+spec: {}

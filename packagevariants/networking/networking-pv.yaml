@@ -1,0 +1,75 @@
+# Multus CNI PackageVariant for RAN cluster
+apiVersion: config.porch.kpt.dev/v1alpha1
+kind: PackageVariant
+metadata:
+  name: multus-ran
+spec:
+  upstream:
+    repo: nephio-workload-blueprints
+    package: networking/multus-cni
+  downstream:
+    repo: ran
+    package: multus-cni
+  pipeline:
+    mutators:
+      - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.2
+        configMap:
+          cluster-name: ran
+---
+# Multus CNI PackageVariant for Core cluster
+apiVersion: config.porch.kpt.dev/v1alpha1
+kind: PackageVariant
+metadata:
+  name: multus-core
+spec:
+  upstream:
+    repo: nephio-workload-blueprints
+    package: networking/multus-cni
+  downstream:
+    repo: core
+    package: multus-cni
+  pipeline:
+    mutators:
+      - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.2
+        configMap:
+          cluster-name: core
+---
+# VLAN Init PackageVariant for RAN cluster
+apiVersion: config.porch.kpt.dev/v1alpha1
+kind: PackageVariant
+metadata:
+  name: vlan-init-ran
+spec:
+  upstream:
+    repo: nephio-workload-blueprints
+    package: networking/vlan-init
+  downstream:
+    repo: ran
+    package: vlan-init
+  pipeline:
+    mutators:
+      - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.2
+        configMap:
+          cluster-name: ran
+          master-interface: ens3  # Change to your node's data plane interface
+          vlan-range: "2 3 4 5 6 7 8 9 10"
+---
+# VLAN Init PackageVariant for Core cluster
+apiVersion: config.porch.kpt.dev/v1alpha1
+kind: PackageVariant
+metadata:
+  name: vlan-init-core
+spec:
+  upstream:
+    repo: nephio-workload-blueprints
+    package: networking/vlan-init
+  downstream:
+    repo: core
+    package: vlan-init
+  pipeline:
+    mutators:
+      - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.2
+        configMap:
+          cluster-name: core
+          master-interface: ens3  # Change to your node's data plane interface
+          vlan-range: "2 3 4 5 6 7 8 9 10"

@@ -1,0 +1,186 @@
+# Network CRs
+# Define the VPC networks used by OAI-RAN and SD-Core
+# Apply BEFORE any PackageVariants
+---
+apiVersion: infra.nephio.org/v1alpha1
+kind: Network
+metadata:
+  name: vpc-ran
+spec:
+  topology: nephio
+  routingTables:
+  - name: vpc-ran
+    prefixes:
+    - prefix: 172:2::/32
+      labels:
+        nephio.org/network-name: n2
+    - prefix: 172.2.0.0/16
+      labels:
+        nephio.org/network-name: n2
+    - prefix: 172:3::/32
+      labels:
+        nephio.org/network-name: n3
+    - prefix: 172.3.0.0/16
+      labels:
+        nephio.org/network-name: n3
+    # Per-cluster labels (add one block per cluster)
+    - prefix: 172.2.0.0/16
+      labels:
+        nephio.org/network-name: n2
+        nephio.org/cluster-name: ran
+    - prefix: 172.3.0.0/16
+      labels:
+        nephio.org/network-name: n3
+        nephio.org/cluster-name: ran
+    - prefix: 172.2.0.0/16
+      labels:
+        nephio.org/network-name: n2
+        nephio.org/cluster-name: core
+    - prefix: 172.3.0.0/16
+      labels:
+        nephio.org/network-name: n3
+        nephio.org/cluster-name: core
+    interfaces:
+    - kind: bridgedomain
+      bridgeDomainName: vpc-ran
+  bridgeDomains:
+  - name: vpc-ran
+    interfaces:
+    - kind: interface
+      selector:
+        matchExpressions:
+        - {key: nephio.org/cluster-name, operator: Exists}
+---
+apiVersion: infra.nephio.org/v1alpha1
+kind: Network
+metadata:
+  name: vpc-cu-e1
+spec:
+  topology: nephio
+  routingTables:
+  - name: vpc-cu-e1
+    prefixes:
+    - prefix: 172:4::/32
+      labels:
+        nephio.org/network-name: e1
+    - prefix: 172.4.0.0/16
+      labels:
+        nephio.org/network-name: e1
+    - prefix: 172.4.0.0/16
+      labels:
+        nephio.org/network-name: e1
+        nephio.org/cluster-name: ran
+    interfaces:
+    - kind: bridgedomain
+      bridgeDomainName: vpc-cu-e1
+  bridgeDomains:
+  - name: vpc-cu-e1
+    interfaces:
+    - kind: interface
+      selector:
+        matchExpressions:
+        - {key: nephio.org/cluster-name, operator: Exists}
+---
+apiVersion: infra.nephio.org/v1alpha1
+kind: Network
+metadata:
+  name: vpc-cudu-f1
+spec:
+  topology: nephio
+  routingTables:
+  - name: vpc-cudu-f1
+    prefixes:
+    - prefix: 172:5::/32
+      labels:
+        nephio.org/network-name: f1
+    - prefix: 172.5.0.0/16
+      labels:
+        nephio.org/network-name: f1
+    - prefix: 172.5.0.0/16
+      labels:
+        nephio.org/network-name: f1
+        nephio.org/cluster-name: ran
+    interfaces:
+    - kind: bridgedomain
+      bridgeDomainName: vpc-cudu-f1
+  bridgeDomains:
+  - name: vpc-cudu-f1
+    interfaces:
+    - kind: interface
+      selector:
+        matchExpressions:
+        - {key: nephio.org/cluster-name, operator: Exists}
+---
+apiVersion: infra.nephio.org/v1alpha1
+kind: Network
+metadata:
+  name: vpc-internal
+spec:
+  topology: nephio
+  routingTables:
+  - name: vpc-internal
+    prefixes:
+    - prefix: 172:1::/32
+      labels:
+        nephio.org/network-name: n4
+    - prefix: 172.1.0.0/16
+      labels:
+        nephio.org/network-name: n4
+    - prefix: 172.1.0.0/16
+      labels:
+        nephio.org/network-name: n4
+        nephio.org/cluster-name: core
+    interfaces:
+    - kind: bridgedomain
+      bridgeDomainName: vpc-internal
+  bridgeDomains:
+  - name: vpc-internal
+    interfaces:
+    - kind: interface
+      selector:
+        matchExpressions:
+        - {key: nephio.org/cluster-name, operator: Exists}
+---
+apiVersion: infra.nephio.org/v1alpha1
+kind: Network
+metadata:
+  name: vpc-internet
+spec:
+  topology: nephio
+  routingTables:
+  - name: vpc-internet
+    prefixes:
+    - prefix: 172:6::/32
+      labels:
+        nephio.org/network-name: n3
+    - prefix: 172.6.0.0/16
+      labels:
+        nephio.org/network-name: n3
+    - prefix: 172:0::/32
+      labels:
+        nephio.org/network-name: n6
+    - prefix: 172.0.0.0/16
+      labels:
+        nephio.org/network-name: n6
+    - prefix: 172.0.0.0/16
+      labels:
+        nephio.org/network-name: n6
+        nephio.org/cluster-name: core
+    - prefix: 172.6.0.0/16
+      labels:
+        nephio.org/network-name: n3
+        nephio.org/cluster-name: ran
+    - prefix: 10.1.0.0/16
+      labels:
+        nephio.org/cluster-name: core
+        nephio.org/prefix-kind: pool
+    interfaces:
+    - kind: bridgedomain
+      bridgeDomainName: vpc-internet
+  bridgeDomains:
+  - name: vpc-internet
+    interfaces:
+    - kind: interface
+      selector:
+        matchExpressions:
+        - {key: nephio.org/cluster-name, operator: Exists}

@@ -1,0 +1,17 @@
+# Upstream repository registration
+# Single blueprint repo containing ALL packages:
+#   - cluster-baseline, platform-addons, networking (multus, vlan-init)
+#   - OAI-RAN (cp-operators, ran-operator, cucp, cuup, du, network)
+#   - SD-Core (cp, operator, upf, amf, smf)
+---
+apiVersion: config.porch.kpt.dev/v1alpha1
+kind: Repository
+metadata:
+  name: nephio-workload-blueprints
+spec:
+  type: git
+  content: Package
+  git:
+    repo: https://github.com/YOUR-ORG/nephio-workload-blueprints.git
+    branch: main
+    directory: /
