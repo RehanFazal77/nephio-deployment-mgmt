@@ -60,6 +60,7 @@ spec:
     name: ran
 ---
 # OAI CUCP (CU Control Plane)
+# Interfaces: E1, F1-C, N2 — each mapped to a physical NIC
 apiVersion: config.porch.kpt.dev/v1alpha1
 kind: PackageVariant
 metadata:
@@ -73,6 +74,13 @@ spec:
     package: oai-ran-cucp
   annotations:
     approval.nephio.org/policy: initial
+  pipeline:
+    mutators:
+      - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.2
+        configMap:
+          e1-interface: eno49     # ← Physical NIC for E1 (CUCP ↔ CUUP)
+          f1c-interface: eno49    # ← Physical NIC for F1-C (CUCP ↔ DU)
+          n2-interface: eno49     # ← Physical NIC for N2 (CUCP → AMF)
   injectors:
   - group: infra.nephio.org
     version: v1alpha1
@@ -80,6 +88,7 @@ spec:
     name: ran
 ---
 # OAI CUUP (CU User Plane)
+# Interfaces: E1, F1-U, N3 — each mapped to a physical NIC
 apiVersion: config.porch.kpt.dev/v1alpha1
 kind: PackageVariant
 metadata:
@@ -93,6 +102,13 @@ spec:
     package: oai-ran-cuup
   annotations:
     approval.nephio.org/policy: initial
+  pipeline:
+    mutators:
+      - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.2
+        configMap:
+          e1-interface: eno49     # ← Physical NIC for E1 (CUUP ↔ CUCP)
+          f1u-interface: eno49    # ← Physical NIC for F1-U (CUUP ↔ DU)
+          n3-interface: eno49     # ← Physical NIC for N3 (CUUP → UPF)
   injectors:
   - group: infra.nephio.org
     version: v1alpha1
@@ -100,6 +116,7 @@ spec:
     name: ran
 ---
 # OAI DU (Distributed Unit)
+# Interfaces: F1 — mapped to a physical NIC
 apiVersion: config.porch.kpt.dev/v1alpha1
 kind: PackageVariant
 metadata:
@@ -113,6 +130,11 @@ spec:
     package: oai-ran-du
   annotations:
     approval.nephio.org/policy: initial
+  pipeline:
+    mutators:
+      - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.2
+        configMap:
+          f1-interface: eno49     # ← Physical NIC for F1 (DU ↔ CU)
   injectors:
   - group: infra.nephio.org
     version: v1alpha1

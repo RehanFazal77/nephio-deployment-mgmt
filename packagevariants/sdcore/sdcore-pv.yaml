@@ -1,4 +1,5 @@
 # SD-Core Control Plane (NRF, UDR, UDM, AUSF, PCF, NSSF, WebUI, MongoDB, Kafka)
+# No secondary interfaces — uses cluster network only
 apiVersion: config.porch.kpt.dev/v1alpha1
 kind: PackageVariant
 metadata:
@@ -39,6 +40,7 @@ spec:
     name: core
 ---
 # SD-Core UPF (MUST be deployed FIRST before AMF and SMF)
+# Interfaces: N3, N4, N6 — each mapped to a physical NIC
 apiVersion: config.porch.kpt.dev/v1alpha1
 kind: PackageVariant
 metadata:
@@ -52,6 +54,13 @@ spec:
     package: sdcore5g-upf
   annotations:
     approval.nephio.org/policy: initial
+  pipeline:
+    mutators:
+      - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.2
+        configMap:
+          n3-interface: eno49     # ← Physical NIC for N3 (UPF ↔ gNB)
+          n4-interface: eno50     # ← Physical NIC for N4 (UPF ↔ SMF)
+          n6-interface: ens1f0    # ← Physical NIC for N6 (UPF → internet)
   injectors:
   - group: infra.nephio.org
     version: v1alpha1
@@ -59,6 +68,7 @@ spec:
     name: core
 ---
 # SD-Core AMF (deploy AFTER UPF is Published)
+# Interfaces: N2 — mapped to a physical NIC
 apiVersion: config.porch.kpt.dev/v1alpha1
 kind: PackageVariant
 metadata:
@@ -72,6 +82,11 @@ spec:
     package: sdcore5g-amf
   annotations:
     approval.nephio.org/policy: initial
+  pipeline:
+    mutators:
+      - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.2
+        configMap:
+          n2-interface: ens1f1    # ← Physical NIC for N2 (AMF ↔ gNB)
   injectors:
   - group: infra.nephio.org
     version: v1alpha1
@@ -79,6 +94,7 @@ spec:
     name: core
 ---
 # SD-Core SMF (deploy AFTER UPF is Published)
+# Interfaces: N4 — mapped to a physical NIC
 apiVersion: config.porch.kpt.dev/v1alpha1
 kind: PackageVariant
 metadata:
@@ -92,6 +108,11 @@ spec:
     package: sdcore5g-smf
   annotations:
     approval.nephio.org/policy: initial
+  pipeline:
+    mutators:
+      - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.2
+        configMap:
+          n4-interface: eno50     # ← Physical NIC for N4 (SMF ↔ UPF)
   injectors:
   - group: infra.nephio.org
     version: v1alpha1
