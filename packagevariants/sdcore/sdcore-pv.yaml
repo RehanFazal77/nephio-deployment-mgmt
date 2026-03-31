@@ -59,8 +59,8 @@ spec:
       - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.2
         configMap:
           n3-interface: eno49     # ← Physical NIC for N3 (UPF ↔ gNB)
-          n4-interface: eno50     # ← Physical NIC for N4 (UPF ↔ SMF)
-          n6-interface: ens1f0    # ← Physical NIC for N6 (UPF → internet)
+          n4-interface: eno49     # ← Physical NIC for N4 (UPF ↔ SMF)
+          n6-interface: eno49     # ← Physical NIC for N6 (UPF → internet)
   injectors:
   - group: infra.nephio.org
     version: v1alpha1
@@ -86,7 +86,7 @@ spec:
     mutators:
       - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.2
         configMap:
-          n2-interface: ens1f1    # ← Physical NIC for N2 (AMF ↔ gNB)
+          n2-interface: eno49     # ← Physical NIC for N2 (AMF ↔ gNB)
   injectors:
   - group: infra.nephio.org
     version: v1alpha1
@@ -112,7 +112,7 @@ spec:
     mutators:
       - image: ghcr.io/kptdev/krm-functions-catalog/apply-setters:v0.2
         configMap:
-          n4-interface: eno50     # ← Physical NIC for N4 (SMF ↔ UPF)
+          n4-interface: eno49     # ← Physical NIC for N4 (SMF ↔ UPF)
   injectors:
   - group: infra.nephio.org
     version: v1alpha1
