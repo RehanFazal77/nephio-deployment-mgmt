@@ -1,0 +1,21 @@
+# OAI Core - AMF (the one CUCP depends on!)
+# The CUCP's dependency_amf.yaml requires packageName: oai-amf
+# in the downstream repo to resolve the AMF dependency
+apiVersion: config.porch.kpt.dev/v1alpha1
+kind: PackageVariant
+metadata:
+  name: oai-amf-ran
+spec:
+  upstream:
+    repo: nephio-workload-blueprints
+    package: workloads/oai-ran/oai-ran/oai-amf
+  downstream:
+    repo: ran
+    package: oai-amf
+  annotations:
+    approval.nephio.org/policy: initial
+  injectors:
+  - group: infra.nephio.org
+    version: v1alpha1
+    kind: WorkloadCluster
+    name: ran

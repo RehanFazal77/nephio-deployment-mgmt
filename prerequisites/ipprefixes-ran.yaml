@@ -1,4 +1,7 @@
-# IPPrefixes for OAI-RAN cluster
+# IPPrefixes for OAI RAN deployment
+# These allocate IP subnets per cluster for each network
+# Apply on the management cluster AFTER networks.yaml
+# Prefixes match upstream OAI packages exactly
 ---
 apiVersion: ipam.resource.nephio.org/v1alpha1
 kind: IPPrefix
@@ -55,12 +58,11 @@ spec:
 apiVersion: ipam.resource.nephio.org/v1alpha1
 kind: IPPrefix
 metadata:
-  name: vpc-internet-n3-ran
+  name: vpc-internal-ran
   labels:
     nephio.org/address-family: ipv4
     nephio.org/cluster-name: ran
-    nephio.org/network-name: n3
 spec:
-  prefix: 172.6.0.0/24
+  prefix: 172.1.0.0/24
   networkInstance:
-    name: vpc-internet
+    name: vpc-internal
